@@ -181,8 +181,18 @@ def decodificaUnigramPalabras(numeros,diccionarioUni,diccionarioBi,diccionarioUn
     posPalabra = 0
     #Recorre los distintos numeros que se encontraban separados por espacios
     for numero in numeros:  
-        if numero in diccionarioUniPal.keys() is not None:
-            print(diccionarioUniPal.get(numero))
+        #Buscar en unigram de palabras si existe alguna entrada para ese numero
+        palabra = ""
+        frecuencia = 0
+        for claves in diccionarioUniPal:
+            num,valor = claves.split(' ', 1)
+            if(num == numero):
+                if(frecuencia < diccionarioUniPal.get(claves)):
+                    palabra = valor
+                    frecuencia = diccionarioUniPal.get(claves)               
+        if len(palabra) > 0:
+            print(palabra)
+        #Si no existe en unigram de palabras ninguna entrada, se aplica el bigram de letras
         else:
             #Se genera la primera letra a partir del unigram
             valDigito = (teclado.get(int(numero[0])))            
@@ -214,11 +224,19 @@ def decodificaBigramPalabras(numeros,diccionarioUni,diccionarioBi,diccionarioUni
     texto = []
     posPalabra = 0
     #Recorre los distintos numeros que se encontraban separados por espacios
-    for numero in numeros:
-        if numero == numeros[0]:
-            if numero in diccionarioUniPal.keys() is not None:         
-                #Falta comprobar que si hay varias coincidencias para el mismo numero que elija el que mayor frecuencia tenga
-                print(diccionarioUniPal.get(numero))
+    for contador in range(len(numeros)):
+        if contador == 0:
+            numero = numeros[0]
+            palabra = ""
+            frecuencia = 0
+            for claves in diccionarioUniPal:
+                num,valor = claves.split(' ', 1)
+                if(num == numero):
+                    if(frecuencia < diccionarioUniPal.get(claves)):
+                        palabra = valor
+                        frecuencia = diccionarioUniPal.get(claves)                 
+            if len(palabra) > 0:
+                print(palabra)
             else:
                 #Se genera la primera letra a partir del unigram
                 valDigito = (teclado.get(int(numero[0])))            
@@ -244,10 +262,16 @@ def decodificaBigramPalabras(numeros,diccionarioUni,diccionarioBi,diccionarioUni
                     posLetra += 1
                 posPalabra += 1
         else:
-            for clave in diccionarioBiPal.keys():
-                if clave.split().get(0) == numero:
-                    print(clave)
-            #Añadir aqui el codigo del bigram de palabras, que funciona casi como el unigram de palabras
+            palabra = ""
+            frecuencia = 0
+            for claves in diccionarioBiPal:
+                num,valor = claves.split(' ', 1)
+                if(num == numero):         
+                    if(frecuencia < diccionarioBiPal.get(claves)):
+                        palabra = valor
+                        frecuencia = diccionarioBiPal.get(claves)                      
+            print(palabra)
+            numero = codificaPalabra(palabra,teclado)
         
 teclado = {}
 teclado[2] = ["a","b","c"]
@@ -270,3 +294,4 @@ numeros = "42782 58346 5847"
 #(decodificaBigramLetras(numeros,diccionarioUni,diccionarioBi,teclado))
 #print(unigramPalabras(archivo))
 (decodificaUnigramPalabras(numeros,diccionarioUni,diccionarioBi,diccionarioUniPal,teclado))
+decodificaBigramPalabras(numeros,diccionarioUni,diccionarioBi,diccionarioUniPal,diccionarioBiPal,teclado)
